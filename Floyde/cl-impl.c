@@ -70,6 +70,9 @@ int loopLen(list* head){
   list* turtle = head -> next;
   int counter = 1;
   while (turtle != head){
+    if(turtle -> next == NULL){
+      return 0;
+    }
     turtle = turtle -> next;
     counter++;
   }
