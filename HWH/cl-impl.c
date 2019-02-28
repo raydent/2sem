@@ -1,4 +1,5 @@
 #include "cl-impl.h"
+// const int HASHNUM = 50;
 list *cl_create(int d){
   list* newlist = (list*) calloc (1, sizeof (list));
   newlist -> data = NULL;
@@ -48,21 +49,7 @@ void popArr(list* pre){
   }
   free(pre);
 }
-// list* createCycleList(int* arr, int amount){
-//   list* first = cl_create(arr[0]);
-//   list* temp = first;
-//   for (int i = 1; i < arr[amount - 1]; i++){
-//     temp = cl_push(temp, arr[i]);
-//   }
-//   temp -> next = first;
-//   return temp;
-// }
 void empty(list* top){
-  // list* temp = top -> next;
-  // free(top);
-  // if (temp != NULL){
-  //   empty(temp);
-  // }
   while (top -> next != NULL){
     empty(top);
   }
