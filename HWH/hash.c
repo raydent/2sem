@@ -1,7 +1,4 @@
 #include "hash.h"
-const int P = 31;
-const int ARRSIZE = 30;
-const int HASHNUM = 50;
 size_t fileSize (FILE* file) {
 	size_t size = 0;
 	fseek (file, 0, SEEK_END);

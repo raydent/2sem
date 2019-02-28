@@ -1,5 +1,4 @@
-// #include "cl-impl.h"
-const int HASHNUM = 50;
+
 #include "hash.h"
 int main(){
   list** table = initTable();

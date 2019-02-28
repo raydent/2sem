@@ -1,5 +1,4 @@
 #include "cl-impl.h"
-// const int HASHNUM = 50;
 list *cl_create(int d){
   list* newlist = (list*) calloc (1, sizeof (list));
   newlist -> data = NULL;
