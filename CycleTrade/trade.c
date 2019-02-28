@@ -9,7 +9,7 @@ int* readFile(int* amount, int* summ, FILE* source){
   return money;
 }
 int bestTrade(int* money, int amount, int summ){
-  qsort(money, amount, sizeof (int), (int(*) (const void *, const void *)) comp);
+  qsort(money, amount, sizeof (int), comp);
   list* top = cl_create(money[0]);
   if (money[0] == 1){
     top -> num = 1;
@@ -53,6 +53,6 @@ int bestTrade(int* money, int amount, int summ){
   printf("min = %d", min);
   empty(top);
 }
-int comp (const int *i, const int *j){
-return *i - *j;
+int comp (const void *i, const void *j){
+return *(int*)i - *(int*)j;
 }

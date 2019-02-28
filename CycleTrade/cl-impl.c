@@ -29,9 +29,57 @@ list *cl_pop(list *pre){
 //   return temp;
 // }
 void empty(list* top){
-  list* temp = top -> next;
-  free(top);
-  if (temp != NULL){
-    empty(temp);
+  list* loop = isItLooped(top);
+  while (loop != NULL){
+    loop -> next = NULL;
+    loop = isItLooped(top);
   }
+  while(top -> next != NULL){
+    cl_pop(top);
+  }
+  free(top);
+}
+list* isItLooped(list* head){
+  list* rabbit = head;
+  list* turtle = head;
+  int count = 0;
+  int state = 0;
+  for (;;){
+    if (rabbit -> next == turtle){
+      state = 1;
+      break;
+    }
+    if (rabbit -> next != NULL){
+      turtle = turtle -> next;
+      rabbit = rabbit -> next;
+    }
+    else if (rabbit -> next == NULL){
+      break;
+    }
+    if (rabbit -> next != NULL){
+      rabbit = rabbit -> next;
+      if (rabbit -> next == turtle){
+        state = 1;
+        break;
+      }
+    }
+    else if (rabbit -> next == NULL){
+      break;
+    }
+  }
+  // printf("state = %d\n", state);
+  if (state == 1){
+    return rabbit;
+  }
+  else
+    return NULL;
+}
+int LoopLen(list* head){
+  list* turtle = head -> next;
+  int counter = 1;
+  while (turtle != head){
+    turtle = turtle -> next;
+    counter++;
+  }
+  return counter;
 }

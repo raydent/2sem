@@ -21,11 +21,6 @@ list *cl_pop(list *pre){
   }
 }
 void empty(list* top){
-  // list* temp = top -> next;
-  // free(top);
-  // if (temp != NULL){
-  //   empty(temp);
-  // }
   list* loop = isItLooped(top);
   while (loop != NULL){
     loop -> next = NULL;
