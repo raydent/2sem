@@ -15,5 +15,6 @@ list *cl_push(list *pre, int d);
 list *cl_pop(list *pre);
 list* createCycleList(int* arr, int amount);
 void empty(list* top);
-void isItLooped(list* head);
-// #include "cl-impl.c"
+list* isItLooped(list* head);
+int LoopLen(list* head);
+#include "cl-impl.c"
