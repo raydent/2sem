@@ -66,7 +66,7 @@ list* isItLooped(list* head){
   else
     return NULL;
 }
-int LoopLen(list* head){
+int loopLen(list* head){
   list* turtle = head -> next;
   int counter = 1;
   while (turtle != head){
