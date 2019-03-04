@@ -4,4 +4,4 @@
 int* readFile(int* amount, int* summ, FILE* source);
 int bestTrade(int* money, int amount, int summ);
 int comp (const void *, const void *);
-#include "trade.c"
+// #include "trade.c"

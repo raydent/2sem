@@ -17,4 +17,4 @@ list* createCycleList(int* arr, int amount);
 void empty(list* top);
 list* isItLooped(list* head);
 int LoopLen(list* head);
-#include "cl-impl.c"
+// #include "cl-impl.c"
