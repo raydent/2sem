@@ -22,13 +22,13 @@ int main() {
   }
   stree = build_syntax_tree(larr);
   // printf("end\n");
-  TruePrint(stree);
-  printf("res = %d", calc_result(stree));
-  // result = calc_result(stree);
+  // TruePrint(stree);
+  // printf("res = %d", calc_result(stree));
+  result = calc_result(stree);
+
+  printf("res = %d\n", result);
   //
-  // printf("%d\n", result);
-  //
-  // free_syntax_tree(stree);
-  // free(larr.lexems);
+  free_syntax_tree(stree);
+  free(larr.lexems);
   return 0;
 }

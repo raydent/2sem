@@ -141,7 +141,7 @@ int maybe_plusminus_braces(const struct lexem_t* lexems, int size){
       }
     }
   }
-  printf("break plusminus\n");
+  // printf("break plusminus\n");
   return 0;
 }
 int maybe_muldiv_braces(const struct lexem_t* lexems, int size){
@@ -258,4 +258,11 @@ int calc_result(struct node_t *top) {
 
 void free_syntax_tree(struct node_t * top) {
   // TODO: your code here
+  if (top -> right != NULL){
+    free_syntax_tree(top -> right);
+  }
+  if (top -> left != NULL){
+    free_syntax_tree(top -> left);
+  }
+  free(top);
 }
