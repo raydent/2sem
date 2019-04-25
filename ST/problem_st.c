@@ -9,6 +9,7 @@ struct node_t* init_node(){
   struct node_t* node = (struct node_t*) calloc (1, sizeof(struct node_t));
   node -> right = NULL;
   node -> left = NULL;
+  return node;
 };
 
 struct lexem_t* p;
