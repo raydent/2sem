@@ -14,6 +14,7 @@ int main() {
   printf("inp = %s", inp);
   // lex to array of lexems
   larr = lex_string(inp);
+  printLexString(larr.lexems, larr.size);
   // printLexString(larr.lexems, larr.size);
   // printf("x = %d\n", larr.size);
   if (larr.lexems == NULL) {

@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
-const int HASHNUM = 50;
+enum { HASHNUM = 50 };
 typedef struct list{
     struct list* next;
     int d;
@@ -21,4 +21,4 @@ list *cl_pop(list *pre);
 list* createCycleList(int* arr, int amount);
 void empty(list* top);
 void popArr(list* pre);
-#include "cl-impl.c"
+// #include "cl-impl.c"

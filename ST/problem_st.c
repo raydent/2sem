@@ -4,165 +4,124 @@
 // expr ::= mult {+, -} expr | mult
 // mult ::= term {*, /} mult | term
 // term ::= ( expr ) | number
-struct node_t* parse_expr(const struct lexem_t* lexems, int size){
-  // struct node_t* node = (struct node_t*) calloc (1, sizeof(struct node_t));
-  // node -> right = NULL;
-  // node -> left = NULL;
-  int count = 0;
-  int state = 0;
-  printLexString(lexems, size);
+
+struct node_t* init_node(){
   struct node_t* node = (struct node_t*) calloc (1, sizeof(struct node_t));
-  if (size == 1 && lexems[0].kind == NUM){
-    node -> data.k = NODE_VAL;
-    node -> data.u.d = lexems[0].lex.num;
-    printf("num state\n");
-    return node;
+  node -> right = NULL;
+  node -> left = NULL;
+};
+
+struct lexem_t* p;
+struct node_t* parse_expr(struct lexem_t* lexems, int size){
+  p = lexems;
+  struct node_t* node = maybe_plusminus(lexems, size);
+  return node;
+}
+
+struct node_t* maybe_plusminus(const struct lexem_t* lexems, int size){
+  UpgPrint();
+  struct node_t* left = maybe_muldiv(lexems, size);
+  if (p == lexems + size){
+    printf("plusmin return case\n");
+    return left;
   }
-  int num = maybe_plusminus_braces(lexems, size);
-  if (num){
-    printf("subadd state\n");
-    node -> data.k = NODE_OP;
-    node -> data.u.op = lexems[num].lex.op;
-    node -> left = parse_expr(lexems, num);
-    node -> right = parse_expr(lexems + num + 1, size - num - 1);
-    return node;
+  // struct node_t* node = init_node();
+  while ((*p).kind == OP && ((*p).lex.op == SUB || (*p).lex.op == ADD)){
+    printf("+-\n");
+    struct node_t* temp = init_node();
+    temp -> data.k = NODE_OP;
+    temp -> data.u.op = (*p).lex.op;
+    p++;
+    struct node_t* right = maybe_muldiv(lexems, size);
+    temp -> left = left;
+    temp -> right = right;
+    left = temp;
   }
-  num = maybe_muldiv_braces(lexems, size);
-  if (num){
-    printf("divmul state\n");
-    node -> data.k = NODE_OP;
-    node -> data.u.op = lexems[num].lex.op;
-    node -> left = parse_expr(lexems, num);
-    node -> right = parse_expr(lexems + num + 1, size - num - 1);
-    return node;
+  return left;
+}
+
+struct node_t* maybe_muldiv(const struct lexem_t* lexems, int size){
+  UpgPrint();
+  struct node_t* left = maybe_braces(lexems, size);
+  if (p == lexems + size){
+    printf("muldiv return case\n");
+    return left;
   }
-  int counter = 0;
-  for (int i = 0; i < size; i++){
-    if (lexems[i].kind == OP || lexems[i].kind == NUM){
-      counter++;
-    }
+  while ((*p).kind == OP && ((*p).lex.op == MUL || (*p).lex.op == DIV)){
+    printf("*\\ \n");
+    struct node_t* temp = init_node();
+    temp -> data.k = NODE_OP;
+    temp -> data.u.op = (*p).lex.op;
+    p++;
+    struct node_t* right = maybe_braces(lexems, size);
+    temp -> left = left;
+    temp -> right = right;
+    left = temp;
   }
-  if (counter == 1){
-    for (int i = 0; i < size; i++){
-      if (lexems[i].kind == NUM){
-        node -> data.k = NODE_VAL;
-        node -> data.u.d = lexems[i].lex.num;
-        printf("broken braces + num state\n");
-        return node;
-      }
-    }
-  }
-  if (lexems[0].kind == BRACE && lexems[size - 1].kind == BRACE && lexems[0].lex.b == LBRAC && lexems[size - 1].lex.b == RBRAC){
-    printf("size - 2 = %d\n", size - 2);
-    int amount = 0;
-    for (int i = 1; i < size; i++){
-      if (lexems[i].kind == BRACE){
-        if (lexems[i].lex.b == LBRAC){
-          printf("+");
-          amount++;
-        }
-        if (lexems[i].lex.b == RBRAC){
-          amount--;
-          printf("-");
-        }
-      }
-    }
-    printf("\n");
-    if (amount == 0){
-      printf("too much braces state\n");
-      node =  parse_expr(lexems + 1, size - 2);
-      // free(node);
+  return left;
+}
+
+struct node_t* maybe_braces(const struct lexem_t* lexems, int size){
+  UpgPrint();
+  if ((*p).kind == BRACE){
+    if((*p).lex.b == LBRAC){
+      p++;
+      struct node_t* node = maybe_plusminus(lexems, size);
+      // UpgPrint();
+      assert((*p).kind == BRACE && (*p).lex.b == RBRAC);
+      printf(")\n");
+      p++;
       return node;
     }
+    // else{
+    //
+    // }
   }
-  printf("3\n");
-  int k = findBestOp(lexems, size);
-  if (k){
-    printf("4\n");
-    node -> data.k = NODE_OP;
-    node -> data.u.op = lexems[k].lex.op;
-    node -> left = parse_expr(lexems, k);
-    node -> right = parse_expr(lexems + k + 1, size - k - 1);
-    printf("bestopstate\n");
+  else
+    return maybe_number(lexems, size);
+}
+
+struct node_t* maybe_number(const struct lexem_t* lexems, int size){
+  UpgPrint();
+  assert(p <= lexems + size);
+  if ((*p).kind == NUM){
+    printf("breakpoint1\n");
+    struct node_t* node = init_node();
+    printf("breakpoint2\n");
+    node -> data.k = NODE_VAL;
+    node -> data.u.d = (*p).lex.num;
+    p++;
+    printf("returning");
     return node;
   }
-    printf("how?\n");
+  else {
+    printf("Error with number occured, p - lexems = %d", p - lexems);
+    exit(0);
+  }
 }
-int findBestOp(const struct lexem_t* lexems, int size){
-  int min = 100;
-  int count = 0;
-  int pos = 0;
-  for (int i = 0; i < size; i++){
-    if (lexems[i].kind == BRACE){
-      if (lexems[i].lex.b == LBRAC){
-        count++;
-      }
-      if (lexems[i].lex.b == RBRAC){
-        count--;
-      }
+
+void UpgPrint(){
+  if ((*p).kind == NUM){
+    printf("%d\n", (*p).lex.num);
+  }
+  if ((*p).kind == BRACE){
+    if ((*p).lex.b == RBRAC){
+      printf(")\n");
     }
-    if (lexems[i].kind == OP && (lexems[i].lex.op == ADD || lexems[i].lex.op == SUB) && count < min){
-      min = count;
-      pos = i;
+    if ((*p).lex.b == LBRAC){
+      printf("(\n");
     }
   }
-  for (int i = 0; i < size; i++){
-    if (lexems[i].kind == BRACE){
-      if (lexems[i].lex.b == LBRAC){
-        count++;
-      }
-      if (lexems[i].lex.b == RBRAC){
-        count--;
-      }
-    }
-    if (lexems[i].kind == OP && (lexems[i].lex.op == MUL || lexems[i].lex.op == DIV) && count < min){
-      min = count;
-      pos = i;
-    }
+  if ((*p).kind == OP){
+    if ((*p).lex.op == MUL)
+      printf("*\n");
+    if ((*p).lex.op == SUB)
+      printf("-\n");
+    if ((*p).lex.op == DIV)
+      printf("\\\n");
+    if ((*p).lex.op == ADD)
+      printf("+\n");
   }
-  return pos;
-}
-int maybe_plusminus_braces(const struct lexem_t* lexems, int size){
-  int count = 0;
-  for (int i = 0; i < size; i++){
-    if (lexems[i].kind == BRACE){
-      if (lexems[i].lex.b == LBRAC){
-        count++;
-      }
-      if (lexems[i].lex.b == RBRAC){
-        count--;
-      }
-    }
-    // printf("count = %d\n", count);
-    if (count == 0 && lexems[i].kind == OP){
-      if (lexems[i].lex.op == ADD || lexems[i].lex.op == SUB){
-        assert(i);
-        return i;
-      }
-    }
-  }
-  // printf("break plusminus\n");
-  return 0;
-}
-int maybe_muldiv_braces(const struct lexem_t* lexems, int size){
-  int count = 0;
-  for (int i = 0; i < size; ++i){
-    if (lexems[i].kind == BRACE){
-      if (lexems[i].lex.b == LBRAC){
-        count++;
-      }
-      if (lexems[i].lex.b == RBRAC){
-        count--;
-      }
-    }
-    if (count == 0 && lexems[i].kind == OP){
-      if (lexems[i].lex.op == MUL || lexems[i].lex.op == DIV){
-        assert(i);
-        return i;
-      }
-    }
-  }
-  return 0;
 }
 // int parse_term(node_t* node, char* arr);
 // int FindBehindBraces(struct lexem_t* lexems, int size){

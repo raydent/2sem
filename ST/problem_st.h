@@ -14,10 +14,15 @@ struct node_t {
   struct node_t *left, *right;
   struct node_data_t data;
 };
-struct node_t* parse_expr(const struct lexem_t* lexems, int size);
-int maybe_plusminus_braces(const struct lexem_t* lexems, int size);
-int maybe_muldiv_braces(const struct lexem_t* lexems, int size);
+struct node_t* init_node();
+struct node_t* parse_expr(struct lexem_t* lexems, int size);
+
 // int parse_term(struct node_t* node, char* arr);
+void UpgPrint();
+struct node_t* maybe_plusminus(const struct lexem_t* lexems, int size);
+struct node_t* maybe_muldiv(const struct lexem_t* lexems, int size);
+struct node_t* maybe_braces(const struct lexem_t* lexems, int size);
+struct node_t* maybe_number(const struct lexem_t* lexems, int size);
 
 struct node_t *build_syntax_tree(struct lex_array_t lexarr);
 
