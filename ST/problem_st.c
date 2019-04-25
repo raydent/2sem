@@ -85,9 +85,9 @@ struct node_t* maybe_number(const struct lexem_t* lexems, int size){
   UpgPrint();
   assert(p <= lexems + size);
   if ((*p).kind == NUM){
-    printf("breakpoint1\n");
+    // printf("breakpoint1\n");
     struct node_t* node = init_node();
-    printf("breakpoint2\n");
+    // printf("breakpoint2\n");
     node -> data.k = NODE_VAL;
     node -> data.u.d = (*p).lex.num;
     p++;
