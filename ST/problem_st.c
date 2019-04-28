@@ -20,15 +20,12 @@ struct node_t* parse_expr(struct lexem_t* lexems, int size){
 }
 
 struct node_t* maybe_plusminus(const struct lexem_t* lexems, int size){
-  UpgPrint();
   struct node_t* left = maybe_muldiv(lexems, size);
   if (p == lexems + size){
-    printf("plusmin return case\n");
     return left;
   }
   // struct node_t* node = init_node();
   while ((*p).kind == OP && ((*p).lex.op == SUB || (*p).lex.op == ADD)){
-    printf("+-\n");
     struct node_t* temp = init_node();
     temp -> data.k = NODE_OP;
     temp -> data.u.op = (*p).lex.op;
@@ -42,14 +39,11 @@ struct node_t* maybe_plusminus(const struct lexem_t* lexems, int size){
 }
 
 struct node_t* maybe_muldiv(const struct lexem_t* lexems, int size){
-  UpgPrint();
   struct node_t* left = maybe_braces(lexems, size);
   if (p == lexems + size){
-    printf("muldiv return case\n");
     return left;
   }
   while ((*p).kind == OP && ((*p).lex.op == MUL || (*p).lex.op == DIV)){
-    printf("*\\ \n");
     struct node_t* temp = init_node();
     temp -> data.k = NODE_OP;
     temp -> data.u.op = (*p).lex.op;
@@ -63,16 +57,17 @@ struct node_t* maybe_muldiv(const struct lexem_t* lexems, int size){
 }
 
 struct node_t* maybe_braces(const struct lexem_t* lexems, int size){
-  UpgPrint();
   if ((*p).kind == BRACE){
     if((*p).lex.b == LBRAC){
       p++;
       struct node_t* node = maybe_plusminus(lexems, size);
-      // UpgPrint();
       assert((*p).kind == BRACE && (*p).lex.b == RBRAC);
-      printf(")\n");
       p++;
       return node;
+    }
+    if((*p).lex.b == RBRAC){
+      printf("ERROR");
+      exit(0);
     }
     // else{
     //
@@ -83,16 +78,12 @@ struct node_t* maybe_braces(const struct lexem_t* lexems, int size){
 }
 
 struct node_t* maybe_number(const struct lexem_t* lexems, int size){
-  UpgPrint();
   assert(p <= lexems + size);
   if ((*p).kind == NUM){
-    // printf("breakpoint1\n");
     struct node_t* node = init_node();
-    // printf("breakpoint2\n");
     node -> data.k = NODE_VAL;
     node -> data.u.d = (*p).lex.num;
     p++;
-    printf("returning");
     return node;
   }
   else {
